@@ -14,6 +14,7 @@ WORKDIR /app
 RUN apk add --no-cache ca-certificates
 
 COPY --from=builder /app/studworks .
+COPY web ./web
 EXPOSE 8080
 ENV GODEBUG=tlsrsakex=1
 ENTRYPOINT ["./studworks"]

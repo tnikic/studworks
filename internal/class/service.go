@@ -6,7 +6,9 @@ import (
 	"hcw.ac.at/studworks/internal/repository/db"
 )
 
-func CreateClass(name string) error {
+type Service struct{}
+
+func (s *Service) CreateClass(name string) error {
 	class := &domain.Class{}
 	err := class.ExpandClass(name)
 	if err != nil {

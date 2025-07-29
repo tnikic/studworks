@@ -3,6 +3,7 @@ package student
 import (
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 
 	"hcw.ac.at/studworks/internal/domain"
@@ -51,7 +52,10 @@ func (h *Handler) SearchStudents(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	slog.Info("Found students", "count", len(students))
+
 	w.Header().Set("Content-Type", "application/json")
+
 	err = json.NewEncoder(w).Encode(students)
 	if err != nil {
 		http.Error(w, "Failed to encode response", http.StatusInternalServerError)

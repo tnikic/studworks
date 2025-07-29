@@ -1,16 +1,46 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <meta name="author" content="" />
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <link href="css/style.css" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <title>Class Student Import</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script defer src="js/main.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
   </head>
-
   <body>
-    <h1>Classes</h1>
+    <div class="container">
+      <form id="searchForm" class="search-form">
+        <div class="search-bar">
+          <input
+            type="text"
+            id="classInput"
+            placeholder="Enter class name..."
+            autocomplete="off"
+            required
+          />
+          <button type="submit" id="searchBtn" aria-label="Search">
+            <svg
+              class="search-icon"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </button>
+        </div>
+      </form>
+      <div id="result"></div>
+    </div>
   </body>
 </html>

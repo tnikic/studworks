@@ -25,7 +25,6 @@ func (s *Service) CreateStudent(student *domain.Student) error {
 		LastName:  student.LastName,
 		Email:     student.Email,
 		Active:    student.Active,
-		ClassName: student.Class.Name,
 	}
 
 	dbStudent, err := pg.Queries.CreateStudent(pg.Ctx, params)
@@ -41,12 +40,6 @@ func (s *Service) SearchStudents(className string) ([]*domain.Student, error) {
 	students := []*domain.Student{}
 
 	l := directory.LDAP{}
-	err := l.Connect()
-	if err != nil {
-		return nil, err
-	}
-	defer l.Close()
-
 	entries, err := l.Queries.ListStudents(className)
 	if err != nil {
 		return nil, err
@@ -61,7 +54,6 @@ func (s *Service) SearchStudents(className string) ([]*domain.Student, error) {
 	for _, entry := range entries {
 		student := &domain.Student{}
 		student.ConvertFromRegistry(entry)
-		student.Class = class
 
 		students = append(students, student)
 	}

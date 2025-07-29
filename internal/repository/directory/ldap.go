@@ -1,7 +1,6 @@
 package directory
 
 import (
-	"crypto/tls"
 	"log/slog"
 	"os"
 
@@ -21,14 +20,7 @@ func (l *LDAP) Connect() error {
 	bind := os.Getenv("LDAP_Bind")
 	password := os.Getenv("LDAP_Password")
 
-	tlsConfig := &tls.Config{
-		ServerName:         "portal.fh-campuswien.ac.at",
-		InsecureSkipVerify: true,
-		MinVersion:         tls.VersionTLS10,
-		MaxVersion:         tls.VersionTLS12,
-	}
-
-	conn, err := ldap.DialURL(server, ldap.DialWithTLSConfig(tlsConfig))
+	conn, err := ldap.DialURL(server)
 	if err != nil {
 		slog.Error("Failed to connect to LDAP server.", slog.Any("err", err))
 		httpError := errs.NewHttpError(500, "LDAP connection failed", err)
@@ -72,4 +64,14 @@ func (l *LDAP) search(filter string, args []string) *ldap.SearchRequest {
 		args,
 		nil,
 	)
+}
+
+func TestLDAP() error {
+	ldap := &LDAP{}
+	err := ldap.Connect()
+	if err != nil {
+		return err
+	}
+	defer ldap.Close()
+	return nil
 }

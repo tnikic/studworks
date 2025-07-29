@@ -18,6 +18,7 @@ func (q *Queries) ListStudents(className string) ([]*ldap.Entry, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer l.Close()
 
 	response, err := l.conn.Search(request)
 	if err != nil {

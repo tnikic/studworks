@@ -6,16 +6,11 @@ import (
 )
 
 type Student struct {
-	UID       string
-	FirstName string
-	LastName  string
-	Email     string
-	Active    bool
-
-	Class       *Class
-	Courses     []*Course
-	Assignments []*Assignment
-	Projects    []*Project
+	UID       string `json:"uid"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Email     string `json:"email"`
+	Active    bool   `json:"active"`
 }
 
 func (s *Student) ConvertFromDB(dbStudent *db.Student) {
@@ -30,6 +25,6 @@ func (s *Student) ConvertFromRegistry(ldapStudent *ldap.Entry) {
 	s.UID = ldapStudent.GetAttributeValue("uid")
 	s.FirstName = ldapStudent.GetAttributeValue("givenName")
 	s.LastName = ldapStudent.GetAttributeValue("sn")
-	s.Email = ldapStudent.GetAttributeValue("email")
+	s.Email = ldapStudent.GetAttributeValue("mail")
 	s.Active = true
 }

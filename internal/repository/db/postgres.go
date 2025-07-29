@@ -61,3 +61,13 @@ func (p *Postgres) Close() {
 	p.Ctx = nil
 	p.Queries = nil
 }
+
+func TestPostgres() error {
+	p := &Postgres{}
+	err := p.Connect()
+	if err != nil {
+		return err
+	}
+	defer p.Close()
+	return nil
+}

@@ -10,13 +10,13 @@ import (
 )
 
 type Class struct {
-	Name        string
-	ProgramCode string
-	Year        int
-	StudyType   string
-	Active      bool
+	Name        string `json:"name"`
+	ProgramCode string `json:"program_code"`
+	Year        int    `json:"year"`
+	StudyType   string `json:"study_type"`
+	Active      bool   `json:"active"`
 
-	Students []*Student
+	Students []*Student `json:"students"`
 }
 
 func (c *Class) ExpandClass(name string) error {
