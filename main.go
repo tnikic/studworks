@@ -18,7 +18,7 @@ func main() {
 	files := http.FileServer(http.Dir("./web"))
 
 	classHandler := class.Handler{}
-	mux.HandleFunc("POST /api/classes", classHandler.CreateClass)
+	mux.HandleFunc("POST /api/classes/{className}", classHandler.CreateClass)
 
 	studentHandler := student.Handler{}
 	mux.HandleFunc("POST /api/students", studentHandler.CreateStudent)

@@ -1,46 +1,38 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-50">
   <head>
     <meta charset="UTF-8" />
-    <title>Class Student Import</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <script defer src="js/main.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
+    <title>StudWorks Search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="css/style.css" rel="stylesheet" />
   </head>
   <body>
-    <div class="container">
-      <form id="searchForm" class="search-form">
-        <div class="search-bar">
+    <div class="centered-container">
+      <div class="card">
+        <form id="searchForm" class="search-row" autocomplete="off">
           <input
+            id="searchInput"
+            class="search-input"
             type="text"
-            id="classInput"
-            placeholder="Enter class name..."
-            autocomplete="off"
+            placeholder="Search for a class..."
             required
           />
-          <button type="submit" id="searchBtn" aria-label="Search">
+          <button class="search-btn" type="submit" title="Search">
             <svg
-              class="search-icon"
-              width="24"
-              height="24"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              viewBox="0 0 24 24"
             >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <circle cx="11" cy="11" r="8" stroke="currentColor"></circle>
+              <path d="M21 21l-4.35-4.35" stroke="currentColor"></path>
             </svg>
           </button>
-        </div>
-      </form>
-      <div id="result"></div>
+        </form>
+        <div id="resultRoot"></div>
+        <div class="error-text" id="errorText" style="display: none"></div>
+      </div>
     </div>
+    <script src="js/app.js"></script>
   </body>
-</html>
+</html
