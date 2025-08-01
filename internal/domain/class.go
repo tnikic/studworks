@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"hcw.ac.at/studworks/internal/errs"
+	"hcw.ac.at/studworks/internal/repository/db"
 )
 
 type Class struct {
@@ -48,4 +49,12 @@ func (c *Class) ExpandClass(name string) error {
 	c.StudyType = studyType
 
 	return nil
+}
+
+func (c *Class) ConvertFromDB(dbClass *db.Class) {
+	c.Name = dbClass.Name
+	c.ProgramCode = dbClass.ProgramCode
+	c.Year = int(dbClass.Year)
+	c.StudyType = dbClass.StudyType
+	c.Active = dbClass.Active
 }

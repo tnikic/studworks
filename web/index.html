@@ -1,38 +1,27 @@
 <!doctype html>
-<html lang="en" class="h-full bg-gray-50">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>StudWorks Search</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="css/style.css" rel="stylesheet" />
+    <title>Class Student Search</title>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <div class="centered-container">
-      <div class="card">
-        <form id="searchForm" class="search-row" autocomplete="off">
-          <input
-            id="searchInput"
-            class="search-input"
-            type="text"
-            placeholder="Search for a class..."
-            required
-          />
-          <button class="search-btn" type="submit" title="Search">
-            <svg
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-            >
-              <circle cx="11" cy="11" r="8" stroke="currentColor"></circle>
-              <path d="M21 21l-4.35-4.35" stroke="currentColor"></path>
-            </svg>
-          </button>
-        </form>
-        <div id="resultRoot"></div>
-        <div class="error-text" id="errorText" style="display: none"></div>
+    <div id="main-container">
+      <div id="search-section">
+        <input
+          type="text"
+          id="class-search-input"
+          placeholder="Enter class name..."
+        />
+        <button id="search-button">Search</button>
+      </div>
+      <div id="class-info" style="display: none">
+        <h2 id="class-name"></h2>
+        <p id="student-count"></p>
+        <button id="import-button">Import</button>
       </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="js/app.js"></script>
   </body>
-</html
+</html>

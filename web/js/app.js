@@ -1,119 +1,70 @@
-// API endpoints
 const API_BASE = "http://studworks.devops.csdc.fh/api";
-const searchForm = document.getElementById("searchForm");
-const searchInput = document.getElementById("searchInput");
-const resultRoot = document.getElementById("resultRoot");
-const errorText = document.getElementById("errorText");
 
-let importInProgress = false;
+const searchInput = document.getElementById('class-search-input');
+const searchButton = document.getElementById('search-button');
+const importButton = document.getElementById('import-button');
+const classInfoSection = document.getElementById('class-info');
+const classNameDisplay = document.getElementById('class-name');
+const studentCountDisplay = document.getElementById('student-count');
 
-searchForm.addEventListener("submit", async function(e) {
-  e.preventDefault();
-  errorText.style.display = "none";
-  resultRoot.innerHTML = "";
-  const className = searchInput.value.trim();
-  if (!className) return;
+let currentClassName = "";
+let currentStudentCount = 0;
 
-  showLoading();
-  try {
-    const studentsRes = await fetch(`${API_BASE}/students/${encodeURIComponent(className)}`);
-    if (!studentsRes.ok)
-      throw new Error("Class not found or server error.");
-    const students = await studentsRes.json();
-
-    showResultCard(className, students);
-  } catch (err) {
-    showError(err.message || "Unknown error.");
-  }
+// --- Search logic ---
+searchButton.addEventListener('click', () => {
+    const className = searchInput.value.trim();
+    if (className) {
+        searchForClass(className);
+    }
 });
 
-function showLoading() {
-  resultRoot.innerHTML = `<div class="result-card"><div class="empty-text">Searching...</div></div>`;
-}
+searchInput.addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
+        searchButton.click();
+    }
+});
 
-function showError(msg) {
-  resultRoot.innerHTML = "";
-  errorText.textContent = msg;
-  errorText.style.display = "";
-}
-
-function showResultCard(className, students) {
-  errorText.style.display = "none";
-  importInProgress = false;
-  let studentsListHTML = "";
-  if (students && students.length > 0) {
-    studentsListHTML = `
-      <ul class="students-list">
-        ${students.map(s => `
-          <li>
-            <span class="student-name">${escapeHTML(s.firstName)} ${escapeHTML(s.lastName)}</span>
-            <span class="student-uid">${escapeHTML(s.uid)}</span>
-          </li>
-        `).join("")}
-      </ul>
-    `;
-  } else {
-    studentsListHTML = `<div class="empty-text">No students found in this class.</div>`;
-  }
-
-  resultRoot.innerHTML = `
-    <div class="result-card" id="classResultCard">
-      <div class="class-row">
-        <span class="class-title">${escapeHTML(className)}</span>
-        <button class="import-btn" id="importBtn">Import</button>
-        <span class="status-text" id="importStatus" style="display:none"></span>
-      </div>
-      ${studentsListHTML}
-    </div>
-  `;
-
-  const importBtn = document.getElementById("importBtn");
-  const importStatus = document.getElementById("importStatus");
-
-  importBtn.addEventListener("click", async function() {
-    if (importInProgress) return;
-    importInProgress = true;
-    importBtn.disabled = true;
-    importStatus.textContent = "Importing...";
-    importStatus.style.display = "";
+// --- Import logic with new endpoint ---
+importButton.addEventListener('click', async () => {
+    if (!currentClassName) return;
 
     try {
-      // 1. Create class
-      let resp = await fetch(`${API_BASE}/classes/${encodeURIComponent(className)}`, {
-        method: "POST",
-      });
-      if (!resp.ok) throw new Error("Failed to create class");
+        // 1. Create class (ignore errors if exists)
+        await axios.post(`${API_BASE}/classes/${encodeURIComponent(currentClassName)}`);
 
-      // 2. Import each student
-      for (const student of students) {
-        let respS = await fetch(`${API_BASE}/students`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            class_name: className,
-            full_name: student.fullName,
-            uid: student.uid
-          })
-        });
-        if (!respS.ok)
-          throw new Error(`Failed to import student: ${student.fullName}`);
-      }
-      importStatus.textContent = "Imported!";
-      importStatus.style.color = "#22c55e";
-    } catch (err) {
-      importStatus.textContent = err.message || "Import failed";
-      importStatus.style.color = "#dc2626";
-    } finally {
-      importInProgress = false;
+        // 2. Trigger backend to create all students for the class
+        await axios.post(`${API_BASE}/students/${encodeURIComponent(currentClassName)}`);
+
+        // 3. Refresh
+        await searchForClass(currentClassName);
+    } catch (error) {
+        console.error("Import failed:", error);
     }
-  });
+});
+
+async function searchForClass(className) {
+    hideClassInfo();
+    try {
+        const response = await axios.get(`${API_BASE}/students/${encodeURIComponent(className)}`);
+        const students = response.data;
+        currentClassName = className;
+        currentStudentCount = Array.isArray(students) ? students.length : 0;
+        showClassInfo(className, currentStudentCount);
+    } catch (err) {
+        currentClassName = className;
+        currentStudentCount = 0;
+        showClassInfo(className, 0);
+    }
 }
 
-// Simple HTML escape to prevent XSS, if any
-function escapeHTML(str) {
-  return String(str).replace(/[&<>"']/g, function(m) {
-    return ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-    })[m];
-  });
+function showClassInfo(className, studentCount) {
+    classNameDisplay.textContent = className;
+    studentCountDisplay.textContent = `Students: ${studentCount}`;
+    classInfoSection.style.display = "block";
+}
+
+function hideClassInfo() {
+    classInfoSection.style.display = "none";
+    classNameDisplay.textContent = "";
+    studentCountDisplay.textContent = "";
 }

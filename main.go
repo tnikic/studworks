@@ -22,6 +22,7 @@ func main() {
 
 	studentHandler := student.Handler{}
 	mux.HandleFunc("POST /api/students", studentHandler.CreateStudent)
+	mux.HandleFunc("POST /api/students/{className}", studentHandler.CreateStudents)
 	mux.HandleFunc("GET /api/students/{className}", studentHandler.SearchStudents)
 
 	// Handle static files

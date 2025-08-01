@@ -11,6 +11,7 @@ type Student struct {
 	LastName  string `json:"last_name"`
 	Email     string `json:"email"`
 	Active    bool   `json:"active"`
+	ClassName string `json:"class_name"`
 }
 
 func (s *Student) ConvertFromDB(dbStudent *db.Student) {
@@ -19,6 +20,7 @@ func (s *Student) ConvertFromDB(dbStudent *db.Student) {
 	s.LastName = dbStudent.LastName
 	s.Email = dbStudent.Email
 	s.Active = dbStudent.Active
+	s.ClassName = dbStudent.ClassName
 }
 
 func (s *Student) ConvertFromRegistry(ldapStudent *ldap.Entry) {
