@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"os"
 
@@ -18,22 +17,13 @@ type Postgres struct {
 
 func (p *Postgres) Connect() error {
 	url := os.Getenv("DB_Url")
-	user := os.Getenv("DB_User")
-	password := os.Getenv("DB_Password")
-	dbname := os.Getenv("DB_DBName")
 
 	ctx := context.Background()
 	p.Ctx = ctx
 
 	connection, err := pgx.Connect(
 		ctx,
-		fmt.Sprintf(
-			"postgres://%s:%s@%s/%s",
-			user,
-			password,
-			url,
-			dbname,
-		),
+		url,
 	)
 	if err != nil {
 		slog.Error("Postgres connection failed.", slog.Any("err", err))

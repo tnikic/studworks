@@ -35,7 +35,6 @@ func requirementsCheck() {
 	errDB := db.TestPostgres()
 	errLDAP := directory.TestLDAP()
 
-	// Use unicode checkmark and cross for status
 	const (
 		check = "\u2713"
 		cross = "\u2717"

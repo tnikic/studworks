@@ -2,6 +2,7 @@ package domain
 
 import (
 	"fmt"
+	"log/slog"
 	"regexp"
 	"strconv"
 	"strings"
@@ -25,6 +26,7 @@ func (c *Class) ExpandClass(name string) error {
 
 	matches := re.FindStringSubmatch(strings.ToUpper(name))
 	if matches == nil {
+		slog.Error("Invalid class name format", slog.String("name", name))
 		httpError := errs.NewHttpError(400, "Invalid class name format", nil)
 		return httpError
 	}
@@ -35,6 +37,7 @@ func (c *Class) ExpandClass(name string) error {
 
 	year, err := strconv.Atoi(fmt.Sprintf("20%s", yearString))
 	if err != nil {
+		slog.Error("Invalid year in class name", slog.String("name", name), slog.Any("err", err))
 		httpError := errs.NewHttpError(400, "Invalid year in class name", err)
 		return httpError
 	}

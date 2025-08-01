@@ -1,6 +1,8 @@
 package class
 
 import (
+	"log/slog"
+
 	"hcw.ac.at/studworks/internal/domain"
 	"hcw.ac.at/studworks/internal/errs"
 	"hcw.ac.at/studworks/internal/repository/db"
@@ -20,6 +22,7 @@ func (s *Service) CreateClass(name string) error {
 	var pg db.Postgres
 	err = pg.Connect()
 	if err != nil {
+		slog.Error("Postgres connection failed.", slog.Any("err", err))
 		httpError := errs.NewHttpError(500, "Postgres connection failed", err)
 		return httpError
 	}
@@ -35,7 +38,9 @@ func (s *Service) CreateClass(name string) error {
 
 	_, err = pg.Queries.CreateClass(pg.Ctx, params)
 	if err != nil {
-		return err
+		slog.Error("Failed to create class in Postgres.", slog.Any("err", err))
+		httpError := errs.NewHttpError(500, "Failed to create class in Postgres", err)
+		return httpError
 	}
 
 	return nil
